@@ -5,7 +5,7 @@ def extract_csv(filename: str):
     
     import pandas as pd
     
-    file_path = '../../CSV/'+filename
+    file_path = filename
     df = pd.read_csv(file_path, encoding='utf8')
     
     return df
@@ -45,8 +45,8 @@ def main():
     '''
     
     # variables
-    order_detail_fname = 'order_detail.csv'
-    restaurant_detail_fname = 'restaurant_detail.csv'
+    order_detail_fname = '../../CSV/'+'order_detail.csv'
+    restaurant_detail_fname = '../../CSV/'+'restaurant_detail.csv'
     order_detail_table = 'public.order_detail'
     restaurant_detail_table = 'public.restaurant_detail'
     
