@@ -1,4 +1,4 @@
 *.ipynb
 .ipynb_checkpoints
-hive/hdfs
-hive/metastore-postgresql
+app/hive/hdfs
+app/hive/metastore-postgresql
