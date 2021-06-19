@@ -1,0 +1,31 @@
+------------------------------------------------------------------
+--         Create order_detail_partitioned table                --
+------------------------------------------------------------------
+
+create external table if not exists order_detail_partitioned (
+  order_created_timestamp Timestamp,
+  status STRING,
+  price INT,
+  discount DECIMAL(18,2),
+  id STRING,
+  driver_id STRING,
+  user_id STRING,
+  restaurant_id STRING
+)
+PARTITIONED BY (dt STRING)
+stored as PARQUET 
+location '/user/hive/warehouse/order_detail_partitioned';
+
+--------------------------------------------------------------------
+Send PARQUET
+--------------------------------------------------------------------
+
+hadoop fs -put order_detail.parquet hdfs://namenode:8020/user/hive/warehouse/order_detail_partitioned
+
+hdfs dfs -copyFromLocal order_detail.parquet /user/hive/warehouse/order_detail_partitioned
+
+
+--------------------------------------------------------------------
+add partition value with dynamic or static ??
+
+try setting it to dynamic partition
