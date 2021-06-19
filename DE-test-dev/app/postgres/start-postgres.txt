@@ -1,2 +1,2 @@
 docker pull postgres:12
-docker run -p 5432:5432 --name source-postgres -e POSTGRES_PASSWORD=password -d postgres:12
+docker run -p 5432:5432 --name source-postgres -e POSTGRES_PASSWORD=password -e POSTGRES_DB=zipmex -d postgres:12
