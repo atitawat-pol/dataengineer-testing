@@ -1,4 +1,4 @@
-CREATE DATABASE zipmex;
+--CREATE DATABASE zipmex;
 
 /* Do not forget to use zipmex DB*/
 CREATE TABLE IF NOT EXISTS public.order_detail (
