@@ -12,21 +12,6 @@ SET hive.exec.dynamic.partition.mode=nonstrict;
 INSERT INTO TABLE zipmex.order_detail PARTITION (dt)
 SELECT order_created_timestamp, status, price, discount, id, driver_id, user_id, restaurant_id, dt FROM order_detail_tmp;
 
-# insert 20190101
-INSERT INTO TABLE zipmex.order_detail PARTITION (dt)
-SELECT order_created_timestamp, status, price, discount, id, driver_id, user_id, restaurant_id, dt FROM order_detail_tmp where dt='20190101';
-
-# insert 20190102
-INSERT INTO TABLE zipmex.order_detail PARTITION (dt)
-SELECT order_created_timestamp, status, price, discount, id, driver_id, user_id, restaurant_id, dt FROM order_detail_tmp where dt='20190102';
-
-# insert 20190103
-INSERT INTO TABLE zipmex.order_detail PARTITION (dt)
-SELECT order_created_timestamp, status, price, discount, id, driver_id, user_id, restaurant_id, dt FROM order_detail_tmp where dt='20190103';
-
-# insert 20190104
-INSERT INTO TABLE zipmex.order_detail PARTITION (dt)
-SELECT order_created_timestamp, status, price, discount, id, driver_id, user_id, restaurant_id, dt FROM order_detail_tmp where dt='20190104';
 -------------------------------------------------------------------------------
 # validate partition
 SHOW PARTITIONS order_detail;
