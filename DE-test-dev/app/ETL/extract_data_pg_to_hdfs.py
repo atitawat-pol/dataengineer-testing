@@ -33,6 +33,11 @@ def transform_order_detail(df):
     df['dt'] = df['order_created_timestamp']\
         .apply(lambda x: x.strftime('%Y%m%d')).astype(str)
     
+    # change datetime to string format due to hive limitation
+    df['order_created_timestamp'] = df['order_created_timestamp'].astype(str)
+#    df['price'] = df['price'].astype(str)
+#    df['discount'] = df['discount'].astype(str)
+    
     return df
 
 def transform_restaurant_detail(df):
@@ -51,7 +56,7 @@ def to_parquet(df, path: str):
     '''
     import pandas as pd
     
-    df.to_parquet(path, engine='fastparquet')
+    df.to_parquet(path, engine='pyarrow')
     
     return
     

@@ -1,0 +1,70 @@
+--------------------------------------------------------------------
+						Create External Table
+--------------------------------------------------------------------
+
+create external table if not exists restaurant_detail_partitioned (
+	id STRING,
+	restaurant_name STRING,
+	category STRING,
+    esimated_cooking_time DOUBLE,
+	latitude DOUBLE,
+	longitude DOUBLE
+)
+PARTITIONED BY (dt STRING)
+stored as PARQUET 
+location '/user/hive/warehouse/restaurant_detail_partitioned';
+
+# short version
+create external table if not exists restaurant_detail_partitioned (id STRING, restaurant_name STRING, category STRING, esimated_cooking_time DOUBLE, latitude DOUBLE, longitude DOUBLE)
+PARTITIONED BY (dt STRING)
+stored as PARQUET 
+location '/user/hive/warehouse/restaurant_detail_partitioned';
+
+--------------------------------------------------------------------
+					Create External Table then insert
+--------------------------------------------------------------------
+# it's working!!!!!
+# Create empty external table
+CREATE EXTERNAL TABLE zipmex.restaurant_detail_partitioned (id STRING, restaurant_name STRING, category STRING, esimated_cooking_time DOUBLE, latitude DOUBLE, longitude DOUBLE)
+PARTITIONED BY (dt STRING);
+
+# set partition dynamic
+SET hive.exec.dynamic.partition.mode=nonstrict;
+
+# insert from non-partition to partition table
+INSERT INTO TABLE restaurant_detail_partitioned PARTITION (dt)
+SELECT id, restaurant_name, category, esimated_cooking_time, latitude, longitude, dt FROM restaurant_detail_no_partitioned;
+
+# validate partition
+SHOW PARTITIONS restaurant_detail_partitioned;
+
+--------------------------------------------------------------------
+# try add partition after create ??
+alter table zipmex.restaurant_detail_partitioned add partition(dt)
+
+# Add partition value
+ALTER TABLE restaurant_detail_partitioned ADD PARTITION(dt='latest');
+ALTER TABLE zipmex.restaurant_detail_partitioned ADD PARTITION (dt='latest') LOCATION '/user/hive/warehouse/restaurant_detail_partitioned/lastest';
+
+# Drop partition value
+ALTER TABLE zipmex.restaurant_detail_partitioned DROP IF EXISTS PARTITION(dt='latest');
+
+# describe
+describe restaurant_detail_partitioned;
+describe formatted restaurant_detail_partitioned;
+
+# view data
+select * from restaurant_detail_partitioned limit 10;
+
+# drop table
+drop table restaurant_detail_partitioned;
+
+# send file
+hadoop fs -put restaurant_detail.parquet hdfs://namenode:8020/user/hive/warehouse/restaurant_detail_partitioned
+hdfs dfs -chmod 777 hdfs://namenode:8020/user/hive/warehouse/restaurant_detail_partitioned
+
+# view file
+hadoop fs -ls hdfs://namenode:8020/user/hive/warehouse/restaurant_detail_partitioned/
+
+# remove file 
+hadoop fs -rm hdfs://namenode:8020/user/hive/warehouse/restaurant_detail_partitioned/restaurant_detail.parquet
