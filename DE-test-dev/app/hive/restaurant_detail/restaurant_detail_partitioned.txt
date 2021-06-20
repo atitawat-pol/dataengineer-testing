@@ -25,18 +25,18 @@ location '/user/hive/warehouse/restaurant_detail_partitioned';
 --------------------------------------------------------------------
 # it's working!!!!!
 # Create empty external table
-CREATE EXTERNAL TABLE zipmex.restaurant_detail_partitioned (id STRING, restaurant_name STRING, category STRING, esimated_cooking_time DOUBLE, latitude DOUBLE, longitude DOUBLE)
+CREATE EXTERNAL TABLE zipmex.restaurant_detail (id STRING, restaurant_name STRING, category STRING, esimated_cooking_time DOUBLE, latitude DOUBLE, longitude DOUBLE)
 PARTITIONED BY (dt STRING);
 
 # set partition dynamic
 SET hive.exec.dynamic.partition.mode=nonstrict;
 
 # insert from non-partition to partition table
-INSERT INTO TABLE restaurant_detail_partitioned PARTITION (dt)
+INSERT INTO TABLE restaurant_detail PARTITION (dt)
 SELECT id, restaurant_name, category, esimated_cooking_time, latitude, longitude, dt FROM restaurant_detail_no_partitioned;
 
 # validate partition
-SHOW PARTITIONS restaurant_detail_partitioned;
+SHOW PARTITIONS restaurant_detail;
 
 --------------------------------------------------------------------
 # try add partition after create ??

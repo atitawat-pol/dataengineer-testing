@@ -36,6 +36,22 @@ ALTER TABLE order_detail_partitioned ADD
   PARTITION (dt = '20190608');
 
 ALTER TABLE order_detail_partitioned ADD PARTITION (dt = '20190608') location '/user/hive/warehouse/zipmex.db/order_detail_partitioned/20190608';
+--------------------------------------------------------------------
+					Create External Table then insert
+--------------------------------------------------------------------
+# Create empty external table
+create external table zipmex.order_detail_partitioned (order_created_timestamp Timestamp, status STRING, price DOUBLE, discount DOUBLE, id STRING, driver_id STRING, user_id STRING, restaurant_id STRING)
+PARTITIONED BY (dt STRING);
+
+# set partition dynamic
+SET hive.exec.dynamic.partition.mode=nonstrict;
+
+# insert from non-partition to partition table
+INSERT INTO TABLE zipmex.order_detail_partitioned PARTITION (dt)
+SELECT order_created_timestamp, status, price, discount, id, driver_id, user_id, restaurant_id, dt FROM order_detail_no_partitioned;
+
+# validate partition
+SHOW PARTITIONS order_detail_partitioned;
 
 --------------------------------------------------------------------
 						Send PARQUET
