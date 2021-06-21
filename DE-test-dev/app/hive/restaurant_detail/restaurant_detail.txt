@@ -1,0 +1,48 @@
+--------------------------------------------------------------------
+					Create External Table then insert
+--------------------------------------------------------------------
+# it's working!!!!!
+# Create empty external table
+CREATE EXTERNAL TABLE zipmex.restaurant_detail (id STRING, restaurant_name STRING, category STRING, esimated_cooking_time DOUBLE, latitude DOUBLE, longitude DOUBLE)
+PARTITIONED BY (dt STRING);
+
+# set partition dynamic
+SET hive.exec.dynamic.partition.mode=nonstrict;
+
+# insert from non-partition to partition table
+INSERT INTO TABLE restaurant_detail PARTITION (dt)
+SELECT id, restaurant_name, category, esimated_cooking_time, latitude, longitude, dt FROM restaurant_detail_tmp;
+
+# validate partition
+SHOW PARTITIONS restaurant_detail;
+
+--------------------------------------------------------------------
+# try add partition after create ??
+alter table zipmex.restaurant_detail add partition(dt)
+
+# Add partition value
+ALTER TABLE restaurant_detail ADD PARTITION(dt='latest');
+ALTER TABLE zipmex.restaurant_detail ADD PARTITION (dt='latest') LOCATION '/user/hive/warehouse/restaurant_detail/lastest';
+
+# Drop partition value
+ALTER TABLE zipmex.restaurant_detail DROP IF EXISTS PARTITION(dt='latest');
+
+# describe
+describe restaurant_detail;
+describe formatted restaurant_detail;
+
+# view data
+select * from restaurant_detail limit 10;
+
+# drop table
+drop table restaurant_detail;
+
+# send file
+hadoop fs -put restaurant_detail.parquet hdfs://namenode:8020/user/hive/warehouse/restaurant_detail
+hdfs dfs -chmod 777 hdfs://namenode:8020/user/hive/warehouse/restaurant_detail
+
+# view file
+hadoop fs -ls hdfs://namenode:8020/user/hive/warehouse/restaurant_detail/
+
+# remove file 
+hadoop fs -rm hdfs://namenode:8020/user/hive/warehouse/restaurant_detail/restaurant_detail.parquet

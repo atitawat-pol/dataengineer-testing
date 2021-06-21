@@ -1,0 +1,5 @@
+*.ipynb
+.ipynb_checkpoints
+app/hive/hdfs
+app/hive/metastore-postgresql
+app/hive/employee
