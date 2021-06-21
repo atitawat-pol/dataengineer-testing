@@ -1,4 +1,5 @@
---CREATE DATABASE zipmex;
+CREATE DATABASE if not exists zipmex;
+use zipmex;
 
 /* Do not forget to use zipmex DB*/
 CREATE TABLE IF NOT EXISTS public.order_detail (
@@ -17,6 +18,6 @@ CREATE TABLE IF NOT EXISTS public.restaurant_detail (
 	"restaurant_name" VARCHAR(256),
 	"category" VARCHAR(256),
 	"esimated_cooking_time"	DECIMAL(18,2),
-	latitude DECIMAL(18,6),
-	longitude DECIMAL(18,6)
+	"latitude" DECIMAL(18,6),
+	"longitude" DECIMAL(18,6)
 );

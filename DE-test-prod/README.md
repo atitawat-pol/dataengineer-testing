@@ -8,6 +8,7 @@ Atitawat Pol-in coding solution for Zipmex interview.
 * [Technologies](#technologies)
 * [Prerequisite](#prerequisite)
 * [Setup](#setup)
+* [Steps](#steps)
 
 ## General info
 
@@ -23,10 +24,16 @@ Technologies in this project:
 ## Prerequisite
 * Install docker from https://docs.docker.com/get-docker/
 * Install python and packages required
+* clone this repo to local
 
 
 ## Setup
-* Use any of the __big data__ / other frameworks (Use Dockers if needed).
-* Include a README file that explains how we can deploy your code 
-* Also all the code/other related files attached as zip file
-* Prepare a simple PPT for the proposed solution
+```bash
+$ pip install -r requirements.txt
+$ docker pull postgres:12
+$ docker run -p 5432:5432 --name staging-pg -e POSTGRES_PASSWORD=password -e POSTGRES_DB=zipmex -d postgres:12
+```
+
+## Steps
+1. install python packages
+2. start postgres database with docker
