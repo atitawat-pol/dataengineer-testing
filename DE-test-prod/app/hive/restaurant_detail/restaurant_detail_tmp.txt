@@ -1,0 +1,22 @@
+create external table if not exists restaurant_detail_tmp (id STRING, restaurant_name STRING, category STRING, esimated_cooking_time DOUBLE, latitude DOUBLE, longitude DOUBLE, dt STRING)
+stored as PARQUET 
+location '/user/hive/warehouse/restaurant_detail_tmp';
+
+# describe
+describe restaurant_detail_tmp;
+describe formatted restaurant_detail_tmp;
+
+# view data
+select * from restaurant_detail_tmp limit 10;
+
+# drop table
+drop table restaurant_detail_tmp;
+
+# send file
+hadoop fs -put restaurant_detail.parquet hdfs://namenode:8020/user/hive/warehouse/restaurant_detail_tmp
+
+# view file
+hadoop fs -ls hdfs://namenode:8020/user/hive/warehouse/restaurant_detail_tmp/
+
+# remove file 
+hadoop fs -rm hdfs://namenode:8020/user/hive/warehouse/restaurant_detail_tmp/restaurant_detail.parquet

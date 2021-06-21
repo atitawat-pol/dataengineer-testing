@@ -1,8 +1,0 @@
-* resolved
-# hive-metastore-postgresql data directory "/var/lib/postgresql/data" has wrong ownership
-https://stackoverflow.com/questions/49148754/docker-container-shuts-down-giving-data-directory-has-wrong-ownership-error-wh
-
-* resolved
-# OCI runtime exec failed: exec failed: container_linux.go:367: starting container process caused: exec: "E:/Program files/Git/bash": stat E:/Program files/Git/bash: no such file or directory: unknown
-https://stackoverflow.com/questions/48001082/oci-runtime-exec-failed-exec-failed-executable-file-not-found-in-path
-> docker exec -it hive-server //bin//bash

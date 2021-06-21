@@ -1,2 +1,0 @@
-docker pull postgres:12
-docker run -p 5432:5432 --name staging-pg -e POSTGRES_PASSWORD=password -e POSTGRES_DB=zipmex -d postgres:12
