@@ -26,6 +26,9 @@ Technologies in this project:
 * clone this repo to your local machine
 
 ## Steps
+```bash
+$ cd DE-test-prod
+```
 1. install python packages with requirements.txt
 ```bash
 $ pip install -r requirements.txt
