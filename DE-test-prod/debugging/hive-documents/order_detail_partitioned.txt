@@ -1,0 +1,109 @@
+------------------------------------------------------------------
+--         Create order_detail_partitioned table                --
+------------------------------------------------------------------
+# create with partition column
+create external table if not exists order_detail_partitioned (
+  order_created_timestamp Timestamp,
+  status STRING,
+  price DOUBLE,
+  discount DOUBLE,
+  id STRING,
+  driver_id STRING,
+  user_id STRING,
+  restaurant_id STRING
+)
+PARTITIONED BY (dt STRING)
+stored as PARQUET 
+location '/user/hive/warehouse/zipmex.db/order_detail_partitioned';
+
+# create without partition column then manually add later
+create external table if not exists order_detail_partitioned (
+  order_created_timestamp Timestamp,
+  status STRING,
+  price DOUBLE,
+  discount DOUBLE,
+  id STRING,
+  driver_id STRING,
+  user_id STRING,
+  restaurant_id STRING,
+  dt STRING
+)
+stored as PARQUET 
+location '/user/hive/warehouse/zipmex.db/order_detail_partitioned';
+
+# Manyally add partition
+ALTER TABLE order_detail_partitioned ADD
+  PARTITION (dt = '20190608');
+
+ALTER TABLE order_detail_partitioned ADD PARTITION (dt = '20190608') location '/user/hive/warehouse/zipmex.db/order_detail_partitioned/20190608';
+--------------------------------------------------------------------
+					Create External Table then insert
+--------------------------------------------------------------------
+# Create empty external table
+create external table zipmex.order_detail_partitioned (order_created_timestamp Timestamp, status STRING, price DOUBLE, discount DOUBLE, id STRING, driver_id STRING, user_id STRING, restaurant_id STRING)
+PARTITIONED BY (dt STRING);
+
+# set partition dynamic
+SET hive.exec.dynamic.partition.mode=nonstrict;
+
+# insert from non-partition to partition table
+INSERT INTO TABLE zipmex.order_detail_partitioned PARTITION (dt)
+SELECT order_created_timestamp, status, price, discount, id, driver_id, user_id, restaurant_id, dt FROM order_detail_no_partitioned;
+
+# validate partition
+SHOW PARTITIONS order_detail_partitioned;
+
+--------------------------------------------------------------------
+						Send PARQUET
+--------------------------------------------------------------------
+# outside zipmex.db
+hadoop fs -put order_detail.parquet hdfs://namenode:8020/user/hive/warehouse/order_detail_partitioned
+
+hdfs dfs -copyFromLocal order_detail.parquet /user/hive/warehouse/order_detail_partitioned
+
+# inside zipmex.db
+hadoop fs -put order_detail.parquet hdfs://namenode:8020/user/hive/warehouse/zipmex.db/order_detail_partitioned
+--------------------------------------------------------------------
+add partition value with dynamic or static ??
+
+# try add partition after create ??
+alter table table1 add partition(age)
+
+# try setting it to dynamic partition
+
+set hive.exec.dynamic.partition=true;
+set hive.exec.dynamic.partition.mode=nonstrict;
+
+--------------------------------------------------------------------
+# Repair table after partition
+
+set hive.msck.path.validation=ignore;
+
+MSCK REPAIR TABLE order_detail_partitioned;
+! Partitions not in metastore:
+
+--------------------------------------------------------------------
+
+# describe
+describe order_detail_partitioned;
+describe formatted order_detail_partitioned;
+
+--------------------------------------------------------------------
+					View and Remove file
+--------------------------------------------------------------------
+# view file
+hadoop fs -ls hdfs://namenode:8020/user/hive/warehouse/order_detail_partitioned
+
+# inside zipmex.db
+hadoop fs -ls hdfs://namenode:8020/user/hive/warehouse/zipmex.db/order_detail_partitioned
+
+# remove file
+hadoop fs -rm hdfs://namenode:8020/user/hive/warehouse/zipmex.db/order_detail_partitioned/order_detail.parquet
+--------------------------------------------------------------------
+# Manipulate table
+
+# view data
+select * from order_detail_partitioned limit 10;
+
+# drop table
+drop table order_detail_partitioned;

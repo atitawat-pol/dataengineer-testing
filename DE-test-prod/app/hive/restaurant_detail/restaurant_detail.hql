@@ -1,16 +1,9 @@
-create database if not exists zipmex;
 use zipmex;
-create external table if not exists restaurant_detail (
-	id STRING,
-	restaurant_name STRING,
-	category STRING,
-	esimated_cooking_time	DECIMAL(18,2),
-	latitude DECIMAL(18,6),
-	longitude DECIMAL(18,6)
-)
---PARTITIONED BY (dt STRING)
-row format delimited
-fields terminated by ','
-lines terminated by '\n'
-stored as TEXTFIE 
-location '/user/hive/warehouse/restaurant_detail';
+
+CREATE EXTERNAL TABLE zipmex.restaurant_detail (id STRING, restaurant_name STRING, category STRING, esimated_cooking_time DOUBLE, latitude DOUBLE, longitude DOUBLE)
+PARTITIONED BY (dt STRING);
+
+SET hive.exec.dynamic.partition.mode=nonstrict;
+
+INSERT INTO TABLE restaurant_detail PARTITION (dt)
+SELECT id, restaurant_name, category, esimated_cooking_time, latitude, longitude, dt FROM restaurant_detail_tmp;

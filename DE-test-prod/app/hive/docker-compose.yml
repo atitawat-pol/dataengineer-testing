@@ -33,8 +33,9 @@ services:
     volumes:
       - ./order_detail:/order_detail
       - ./restaurant_detail:/restaurant_detail
-	  - ./order_detail_new:/order_detail_new
+      - ./order_detail_new:/order_detail_new
       - ./restaurant_detail_new:/restaurant_detail_new
+      - ./sql_requirements:/sql_requirements
     env_file:
       - ./hadoop-hive.env
     environment:

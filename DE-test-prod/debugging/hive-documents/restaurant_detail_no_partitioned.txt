@@ -1,0 +1,53 @@
+create database if not exists zipmex;
+use zipmex;
+create external table if not exists restaurant_detail_no_partitioned (
+	id STRING,
+	restaurant_name STRING,
+	category STRING,
+    esimated_cooking_time DOUBLE,
+	latitude DOUBLE,
+	longitude DOUBLE,
+	dt STRING
+)
+stored as PARQUET 
+location '/user/hive/warehouse/restaurant_detail_no_partitioned';
+
+# STRING version
+create external table if not exists restaurant_detail_no_partitioned (id STRING, restaurant_name STRING, category STRING, esimated_cooking_time STRING, latitude STRING, longitude STRING, dt STRING)
+stored as PARQUET 
+location '/user/hive/warehouse/restaurant_detail_no_partitioned';
+
+# FLOAT version
+create external table if not exists restaurant_detail_no_partitioned (id STRING, restaurant_name STRING, category STRING, esimated_cooking_time FLOAT, latitude FLOAT, longitude FLOAT, dt STRING)
+stored as PARQUET 
+location '/user/hive/warehouse/restaurant_detail_no_partitioned';
+
+# Double version
+** PERFECT!!
+create external table if not exists restaurant_detail_no_partitioned (id STRING, restaurant_name STRING, category STRING, esimated_cooking_time DOUBLE, latitude DOUBLE, longitude DOUBLE, dt STRING)
+stored as PARQUET 
+location '/user/hive/warehouse/restaurant_detail_no_partitioned';
+
+# Decimal version
+create external table if not exists restaurant_detail_no_partitioned (id STRING, restaurant_name STRING, category STRING, esimated_cooking_time DECIMAL(18,2), latitude DECIMAL(18,6), longitude DECIMAL(18,6), dt STRING)
+stored as PARQUET 
+location '/user/hive/warehouse/restaurant_detail_no_partitioned';
+
+# describe
+describe restaurant_detail_no_partitioned;
+describe formatted restaurant_detail_no_partitioned;
+
+# view data
+select * from restaurant_detail_no_partitioned limit 10;
+
+# drop table
+drop table restaurant_detail_no_partitioned;
+
+# send file
+hadoop fs -put restaurant_detail.parquet hdfs://namenode:8020/user/hive/warehouse/restaurant_detail_no_partitioned
+
+# view file
+hadoop fs -ls hdfs://namenode:8020/user/hive/warehouse/restaurant_detail_no_partitioned/
+
+# remove file 
+hadoop fs -rm hdfs://namenode:8020/user/hive/warehouse/restaurant_detail_no_partitioned/restaurant_detail.parquet
