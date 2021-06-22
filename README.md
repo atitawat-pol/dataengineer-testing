@@ -57,7 +57,7 @@ $ docker-compose up
 $ cd ../ETL/
 $ python extract_data_pg_to_hdfs.py
 ```
-7. Create two external tables order_detail and restaurant_detail in hive. After that, Send parquet file to hdfs where external tables point to.
+7. Create two external tables order_detail and restaurant_detail in hive. Then, Send parquet file to hdfs where external tables point to. After that, partition two tables order_detail and restaurant_detail with column name dt dynamically.
 ```bash
 # shell into hive-server container
 $ docker exec -it hive-server /bin/bash
@@ -65,10 +65,12 @@ $ docker exec -it hive-server /bin/bash
 $ cd ../order_detail
 $ hive -f order_detail_tmp.hql
 $ hadoop fs -put order_detail.parquet hdfs://namenode:8020/user/hive/warehouse/order_detail_tmp
+# create order_detail partitioned by dt
 $ hive -f order_detail.hql
 $ cd ../restaurant_detail
 $ hive -f restaurant_detail_tmp.hql
 $ hadoop fs -put restaurant_detail.parquet hdfs://namenode:8020/user/hive/warehouse/restaurant_detail_tmp
+# create restaurant_detail partitiioned by dt
 $ hive -f restaurant_detail.hql
 ```
 8. Create table order_detail_new
