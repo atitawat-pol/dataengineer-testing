@@ -8,6 +8,7 @@ Atitawat Pol-in coding solution for Zipmex interview.
 * [Technologies](#technologies)
 * [Prerequisite](#prerequisite)
 * [Steps](#steps)
+* [Deploy](#deploy)
 
 ## General info
 
@@ -113,3 +114,8 @@ $ sh docker_cp.sh
 $ cd DE-test-prod/app/hive/
 $ docker-compose down
 ```
+
+## Deploy
+If you want to deploy on production environment. You should deploy 6 docker containers on Kubernetes cluster with 1 container/pod.
+
+Move all Python codes to workflow scheduler tools e.g., Apache Airflow, AWS Lambda + AWS Step Function.
